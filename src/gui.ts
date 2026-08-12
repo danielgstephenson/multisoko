@@ -3,7 +3,7 @@ import * as opentype from 'opentype.js'
 import { gridSize } from './parameters'
 import { Grid } from './grid'
 
-export class Renderer {
+export class GUI {
   font: opentype.Font
   svgDiv = document.getElementById('svgDiv') as HTMLDivElement
   svg = SVG().addTo('#svgDiv')
