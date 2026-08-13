@@ -81,6 +81,7 @@ export class Header {
         color: teamColors[team],
         width: 0.1
       })
+      rect.click(_ => this.game.selectTeam(team))
       this.flags.push(rect)
     })
   }

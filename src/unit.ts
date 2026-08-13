@@ -3,7 +3,7 @@ import { stateToLocs } from "./state"
 import type { GUI } from "./gui"
 import type { Game } from "./game"
 import { range, sample } from "./math"
-import { getPosition, teamColors } from "./parameters"
+import { getPosition, moveInterval, teamColors, unitCount } from "./parameters"
 
 export class Unit {
   gui: GUI
@@ -14,6 +14,7 @@ export class Unit {
   group: G
   pointer: Rect
   body: G
+  moving = false
 
   constructor(gui: GUI, rank: number) {
     this.gui = gui
@@ -28,6 +29,7 @@ export class Unit {
       translateX: position.x,
       translateY: position.y
     })
+    this.group.click(_ => this.game.selectTeam(this.team))
     this.body = this.group.group().transform({
       translateX: 0,
       translateY: 0,
@@ -46,5 +48,29 @@ export class Unit {
     const box = path.getBoundingBox()
     const label = this.group.path(path.toPathData(4)).flip('y')
     label.center(0, box.y1 - box.y2)
+  }
+
+  move(): void {
+    this.moving = true
+    const offset = (this.game.round + 1) % unitCount
+    const index = (unitCount - offset + this.rank) % unitCount
+    const loc = stateToLocs(this.game.state)[index]
+    const position = getPosition(loc, this.gui.angle)
+    this.group.animate(800 * moveInterval).transform({
+      translateX: position.x,
+      translateY: position.y
+    }).after(_ => {
+      this.moving = false
+    })
+  }
+
+  update(): void {
+    this.body.transform({
+      translateX: 0,
+      translateY: 0,
+      rotate: 90 * this.dir
+    })
+    const showPointer =  this.rank === (this.game.round % unitCount)
+    this.pointer.opacity(showPointer ? 1 : 0)
   }
 }

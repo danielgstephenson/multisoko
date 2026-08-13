@@ -25,12 +25,14 @@ export class GUI {
     this.grid = new Grid(this)
     this.header = new Header(this)
     range(unitCount).forEach(rank => new Unit(this, rank))
-    this.updateFocus(0)
+    this.updateFocus()
   }
 
   update(): void {
     this.header.update()
     this.grid.update()
+    this.units.forEach(unit => unit.update())
+    this.updateFocus()
   }
 
   setup() {
@@ -50,7 +52,8 @@ export class GUI {
     this.svgDiv.style.flexDirection = direction
   }
 
-  updateFocus (rank: number): void {
+  updateFocus (): void {
+    const rank = this.game.round % unitCount
     const svgPoint = this.svg.node.createSVGPoint()
     svgPoint.x = 0
     svgPoint.y = 0
