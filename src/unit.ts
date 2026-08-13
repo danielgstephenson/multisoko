@@ -70,7 +70,8 @@ export class Unit {
       translateY: 0,
       rotate: 90 * this.dir
     })
-    const showPointer =  this.rank === (this.game.round % unitCount)
+    const active = this.rank === (this.game.round % unitCount)
+    const showPointer = active && this.game.phase !== 'end'
     this.pointer.opacity(showPointer ? 1 : 0)
   }
 }

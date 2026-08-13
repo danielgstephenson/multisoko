@@ -1,7 +1,7 @@
 import { G, Rect } from "@svgdotjs/svg.js";
 import type { GUI } from "./gui";
 import { range } from "./math";
-import { borderColor, getPosition, goalColor, goals, gridSize, highlightColor, teamColors, tieColor, unitCount } from "./parameters";
+import { borderColor, endInterval, getPosition, goalColor, goals, gridSize, highlightColor, maxRound, teamColors, tieColor, unitCount } from "./parameters";
 import type { Game } from "./game";
 import { stateToLocs } from "./state";
 
@@ -26,24 +26,26 @@ export class Grid {
 
   update(): void {
     this.updateHighlights()
-    this.updateTiles()
+    this.updateOutRect()
+    this.updateGoals()
   }
 
-  updateTiles(): void {
-    const scores = this.game.getScores()
-    let mapColor = borderColor
-    if(this.game.phase==='end') {
-      mapColor = tieColor
-      if (scores[0] === 2) mapColor = teamColors[0]
-      if (scores[1] === 2) mapColor = teamColors[1]
-    } else {
+  updateOutRect(): void {
+    if(this.game.phase !== 'end') {
+      this.outRect.stroke({color: borderColor})
       this.outRect.attr('stroke-dasharray','')
+      return
     }
+    let mapColor = tieColor
+    if (this.game.winner === 0) mapColor = teamColors[0]
+    if (this.game.winner === 1) mapColor = teamColors[1]
     this.outRect.stroke({color: mapColor})
-    this.tiles.flat().forEach(tile => {
-      tile.stroke({color: mapColor})
-    })
-  }
+    const sideLength = this.outRect.bbox().width
+    const perimeter = 4 * sideLength
+    const a = perimeter * this.game.countdown / endInterval
+    const b = perimeter - a
+    this.outRect.attr('stroke-dasharray', `${a} ${b}`)
+}
 
   updateHighlights(): void {
     this.clearHighlights()
@@ -65,6 +67,24 @@ export class Grid {
   clearHighlights(): void {
     this.highlights.flat().forEach(highlight => {
       highlight.opacity(0)
+    })
+  }
+
+  updateGoals(): void {
+    goals.forEach((loc,i) => {
+      const position = getPosition(loc, this.gui.angle)
+      this.goalGroups[i].transform({
+        translateX: position.x,
+        translateY: position.y
+      })
+    })
+    if(this.game.phase === 'end') return
+    this.goalRects.forEach(goalRect => {
+      const sideLength = goalRect.bbox().width
+      const perimeter = 4 * sideLength
+      const b = perimeter * (this.game.round - 1) / maxRound
+      const a = perimeter - b
+      goalRect.attr('stroke-dasharray', `${a} ${b}`)
     })
   }
 

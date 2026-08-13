@@ -29,7 +29,7 @@ export class Input {
     if (event.button !== 0) return
     const x = event.clientX - focus.x
     const y = focus.y - event.clientY
-    let dir = 0
+    let dir: number
     if (Math.abs(x) > Math.abs(y)) {
       dir = x > 0 ? 0 : 2
     } else {

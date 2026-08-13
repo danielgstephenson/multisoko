@@ -4,7 +4,7 @@ import { Grid } from './grid'
 import { Header } from './header'
 import type { Game } from './game'
 import { Unit } from './unit'
-import { range, type Vec2 } from './math'
+import { range, sample, type Vec2 } from './math'
 
 export class GUI {
   game: Game
@@ -19,6 +19,7 @@ export class GUI {
 
   constructor (game: Game) {
     this.game = game
+    this.angle = sample(range(4))
     this.onResize()
     window.addEventListener('resize', () => this.onResize())
     this.setup()

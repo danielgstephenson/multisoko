@@ -17,7 +17,7 @@ export class Header {
     this.game = this.gui.game
     this.font = this.game.font
     this.levelLabel = this.makeLevelLabel()
-    this.updateLevelLabel(1)
+    this.updateLevelLabel()
     this.addFlags()
     this.addTeamArrows()
   }
@@ -25,6 +25,7 @@ export class Header {
   update(): void {
     this.updateTeamArrows()
     this.updateFlags()
+    this.updateLevelLabel()
   }
 
   updateFlags(): void {
@@ -37,15 +38,15 @@ export class Header {
     })
   }
 
-  updateLevelLabel(level: number) {
-    const text = `Level ${level.toFixed(0)}`
+  updateLevelLabel() {
+    const text = `Level ${this.game.level.toFixed(0)}`
     const path = this.font.getPath(text, 0, 0, 0.5)
     this.levelLabel.attr({ d: path.toPathData(4) })
     this.levelLabel.fill(labelColor)
     const box = path.getBoundingBox()
     this.levelLabel.transform({
-      translateX: +0.5 * (box.x1 - box.x2),
-      translateY: +0.5 * (box.y2 - box.y1)
+      translateX: 0.5 * (box.x1 - box.x2),
+      translateY: 0.5 * (box.y2 - box.y1)
     })
   }
 
@@ -55,7 +56,7 @@ export class Header {
       return
     }
     this.teamArrows.forEach(arrow => {
-      arrow.opacity(0.5 + 0.5 * Math.sin(0.5 * this.game.tick))
+      arrow.opacity(0.5 + 0.5 * Math.sin(6 * this.game.time))
     })
   }
 
