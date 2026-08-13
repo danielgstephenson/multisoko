@@ -1,6 +1,7 @@
 import { range, rotate, type Vec2 } from './math'
 
 export const borderColor = 'hsl(0, 0%, 15%)'
+export const labelColor = 'hsl(0,0%,50%)'
 export const highlightColor = 'hsl(0, 0%, 100%)'
 export const goalColor = 'hsl(60, 100%, 30%)'
 export const tieColor = 'hsl(0, 100%, 30%)'
@@ -11,6 +12,7 @@ export const teamColors = [
 
 export const gridSize = 5
 export const unitCount = 6
+export const timeScale = 1
 export const tickInterval = 0.1
 export const moveInterval = 0.75
 export const choiceInterval = 15
@@ -59,7 +61,7 @@ export const outerGridVecs = gridVecs.filter(v => {
   return !innerX || !innerY
 })
 
-export function getPosition (loc: number, qTurns: number): Vec2 {
+export function getPosition (loc: number, rotation: number): Vec2 {
   const gridVec = gridVecs[loc]
-  return rotate(gridVec, origin, qTurns)
+  return rotate(gridVec, origin, rotation)
 }

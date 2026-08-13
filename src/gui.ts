@@ -1,21 +1,29 @@
 import { SVG} from '@svgdotjs/svg.js'
-import * as opentype from 'opentype.js'
 import { gridSize } from './parameters'
 import { Grid } from './grid'
+import { Header } from './header'
+import type { Game } from './game'
 
 export class GUI {
-  font: opentype.Font
+  game: Game
   svgDiv = document.getElementById('svgDiv') as HTMLDivElement
   svg = SVG().addTo('#svgDiv')
+  rotation = 0
   padding = 1.25
   grid: Grid
+  header: Header
 
-  constructor (font: opentype.Font) {
-    this.font = font
+  constructor (game: Game) {
+    this.game = game
     this.onResize()
     window.addEventListener('resize', () => this.onResize())
     this.setup()
-    this.grid = new Grid(this) 
+    this.grid = new Grid(this)
+    this.header = new Header(this)
+  }
+
+  update(): void {
+    this.header.update()
   }
 
   setup() {

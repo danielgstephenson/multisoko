@@ -1,8 +1,8 @@
  import * as opentype from 'opentype.js'
-import { GUI } from './gui'
+import { Game } from './game'
  
 const response = await fetch('/Lekton-Bold.ttf')
 const buffer = await response.arrayBuffer()
 const font = opentype.parse(buffer)
 
-void new GUI(font)
+void new Game(font)

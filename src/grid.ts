@@ -1,13 +1,15 @@
 import { G, Rect } from "@svgdotjs/svg.js";
 import type { GUI } from "./gui";
 import { range } from "./math";
-import { borderColor, gridSize, highlightColor } from "./parameters";
+import { borderColor, getPosition, goalColor, goals, gridSize, highlightColor } from "./parameters";
 
 export class Grid {
   gui: GUI
   group: G
   tiles: Rect[][] = []
   highlights: Rect[][] = []
+  goalRects: Rect[] = []
+  goalGroups: G[] = []
   outRect: Rect
 
   constructor (gui: GUI) {
@@ -15,6 +17,7 @@ export class Grid {
     this.group = gui.svg.group()
     this.addTiles()
     this.outRect = this.makeOutRect()
+    this.addGoals()
   }
 
   addTiles(): void {
@@ -53,6 +56,29 @@ export class Grid {
     })
     outRect.center(center, center)
     return outRect
+  }
+
+  addGoals(): void {
+    this.goalGroups = []
+    goals.forEach(loc => {
+      const position = getPosition(loc, this.gui.rotation)
+      const goalGroup = this.gui.svg.group().transform({
+        translateX: position.x,
+        translateY: position.y
+      })
+      this.goalGroups.push(goalGroup)
+      const rect = goalGroup.rect(0.9, 0.9).center(0, 0)
+      rect.fill({
+        color: goalColor,
+        opacity: 0.2
+      })
+      rect.stroke({
+        color:goalColor,
+        width: 0.05,
+        opacity: 1
+      })
+      this.goalRects.push(rect)
+    })
   }
 
 }
