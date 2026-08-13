@@ -24,14 +24,17 @@ export class Header {
 
   update(): void {
     this.updateTeamArrows()
+    this.updateFlags()
   }
 
-  makeLevelLabel(): Path {
-    const group = this.gui.svg.group()
-    group.translate(2, 5.01)
-    group.flip('y')
-    const levelLabel = group.path()
-    return levelLabel
+  updateFlags(): void {
+    this.flags.forEach((flag, team) => {
+      const playerTeamColor = teamColors[this.game.playerTeam]
+      const fillColor = team === this.game.playerTeam ? playerTeamColor : 'black'
+      const opacity = 1
+      flag.opacity(opacity)
+      flag.fill(fillColor)
+    })
   }
 
   updateLevelLabel(level: number) {
@@ -44,6 +47,24 @@ export class Header {
       translateX: +0.5 * (box.x1 - box.x2),
       translateY: +0.5 * (box.y2 - box.y1)
     })
+  }
+
+  updateTeamArrows(): void {
+    if (this.game.phase !== 'team') {
+      this.teamArrows.forEach(arrow => { arrow.opacity(0) })
+      return
+    }
+    this.teamArrows.forEach(arrow => {
+      arrow.opacity(0.5 + 0.5 * Math.sin(0.5 * this.game.tick))
+    })
+  }
+
+  makeLevelLabel(): Path {
+    const group = this.gui.svg.group()
+    group.translate(2, 5.01)
+    group.flip('y')
+    const levelLabel = group.path()
+    return levelLabel
   }
 
   addFlags(): void {
@@ -88,15 +109,4 @@ export class Header {
       this.teamArrows[i] = arrow
     })
   }
-
-  updateTeamArrows(): void {
-    if (this.game.phase !== 'team') {
-      this.teamArrows.forEach(arrow => { arrow.opacity(0) })
-      return
-    }
-    this.teamArrows.forEach(arrow => {
-      arrow.opacity(0.5 + 0.5 * Math.sin(0.5 * this.game.tick))
-    })
-  }
-
 }
