@@ -68,10 +68,8 @@ export class Unit {
     this.body.transform({
       translateX: 0,
       translateY: 0,
-      rotate: 90 * this.dir
+      rotate: 90 * (this.dir + this.gui.angle) 
     })
-    const active = this.rank === (this.game.round % unitCount)
-    const showPointer = active && this.game.phase !== 'end'
-    this.pointer.opacity(showPointer ? 1 : 0)
+    this.pointer.opacity(0)
   }
 }

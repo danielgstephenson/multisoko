@@ -41,11 +41,12 @@ export class Game {
   }
 
   async onMatchComplete(): Promise<void> {
+    this.phase = 'loading'
     let levelChange = 0
     const botTeam = 1 - this.playerTeam
     if(this.winner === this.playerTeam) levelChange = 1
     if(this.winner === botTeam) levelChange = -1
-    this.level = clamp(0,30,this.level + levelChange)
+    this.level = clamp(1,30,this.level + levelChange)
     this.state = await queryStartingState(this.level)
     this.gui.angle = sample(range(4))
     const locs = stateToLocs(this.state)
