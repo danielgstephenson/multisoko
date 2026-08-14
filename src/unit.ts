@@ -70,6 +70,6 @@ export class Unit {
       translateY: 0,
       rotate: 90 * (this.dir + this.gui.angle) 
     })
-    this.pointer.opacity(0)
+    this.pointer.opacity(1)
   }
 }
