@@ -5,6 +5,6 @@ import { queryStartingState } from './bot'
 const response = await fetch('/Lekton-Bold.ttf')
 const buffer = await response.arrayBuffer()
 const font = opentype.parse(buffer)
-const state = await queryStartingState(1)
+const state = await queryStartingState(5)
 
 void new Game(font, state)

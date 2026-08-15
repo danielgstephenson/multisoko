@@ -10,7 +10,7 @@ export class Game {
   gui: GUI
   input: Input
   state: number
-  level = 1
+  level = 5
   phase = 'team'
   time = 0
   round = 0
